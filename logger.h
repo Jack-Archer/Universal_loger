@@ -12,10 +12,11 @@
 #include <exception>
 
 
-std::string  LogExpr(const std::string& func_name, const std::string& file_name, int line_number);
+//std::string  LogExpr(const std::string& func_name, const std::string& file_name, int line_number);
 
-#define LOG_INFO LogExpr(__FUNCTION__, __FILE__, __LINE__)
-#define LOG Streamer::instance()
+//#define LOG_INFO LogExpr(__FUNCTION__, __FILE__, __LINE__)
+#define CREATE_LOG Streamer::instance()
+#define LOG Streamer::instance().LogInfo(__FUNCTION__, __FILE__, __LINE__), Streamer::instance()
 
 /*enum class StreamType {
 };*/
@@ -36,7 +37,7 @@ public:
         //inside_stream_.clear();
         //inside_stream_ << msg;
         std::for_each((*stream_ptr_).rbegin(), (*stream_ptr_).rend(),[this, &msg](auto &strm){
-            //*strm << inside_stream_.str();
+            *strm << inside_stream_.str() << std::endl;
             *strm << msg;
             *strm << std::endl;
         });
@@ -65,6 +66,11 @@ public:
     const void printStream(int number) const;
     const void printAllStream() const;
 
+    void LogInfo(const std::string& func_name, const std::string& file_name, int line_number) {
+        inside_stream_  << "IN FILE <" << file_name  << "> IN LINE <" << line_number << "> IN FUNC <" <<  func_name << "> INFO_MSG:: ";
+    }
+
+
 
 private:
     Streamer() = default;
@@ -74,6 +80,6 @@ private:
 
     user_stream my_stream_{};
     std::unique_ptr<std::vector<std::ostream*>> stream_ptr_{nullptr};
-    //std::stringstream inside_stream_{};
+    std::stringstream inside_stream_{};
 };
 
