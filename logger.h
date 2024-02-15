@@ -10,16 +10,13 @@
 #include <fstream>
 #include <memory>
 #include <exception>
+#include <execution>
 
 
-//std::string  LogExpr(const std::string& func_name, const std::string& file_name, int line_number);
 
-//#define LOG_INFO LogExpr(__FUNCTION__, __FILE__, __LINE__)
 #define CREATE_LOG Streamer::instance()
-#define LOG Streamer::instance().LogInfo(__FUNCTION__, __FILE__, __LINE__), Streamer::instance()
+#define LOG Streamer::instance().LogInfo(__TIMESTAMP__, __FUNCTION__, __FILE__, __LINE__), Streamer::instance()
 
-/*enum class StreamType {
-};*/
 
 
 using user_stream = std::unordered_map<int, std::vector<std::ostream*>>;
@@ -34,12 +31,9 @@ public:
 
     template <typename Type>
     Streamer &operator<<(const Type msg) {
-        //inside_stream_.clear();
-        //inside_stream_ << msg;
-        std::for_each((*stream_ptr_).rbegin(), (*stream_ptr_).rend(),[this, &msg](auto &strm){
-            *strm << inside_stream_.str() << std::endl;
-            *strm << msg;
-            *strm << std::endl;
+        inside_stream_ << msg << std::endl;
+        std::for_each((*stream_ptr_).rbegin(), (*stream_ptr_).rend(),[this](auto &strm){
+            *strm << inside_stream_.str();
         });
         return *this;
     }
@@ -56,20 +50,14 @@ public:
 
 
     void addStream(int num, std::ostream* ptr_stream);
+    bool checkAllStreams();
 
-    template <typename It>
-    void addStream(int num, It beg_, It end_) {
 
-    }
-
-    void deleteStream();
-    const void printStream(int number) const;
+    void deleteStream(int num);
+    void deleteAllStream();
     const void printAllStream() const;
 
-    void LogInfo(const std::string& func_name, const std::string& file_name, int line_number) {
-        inside_stream_  << "IN FILE <" << file_name  << "> IN LINE <" << line_number << "> IN FUNC <" <<  func_name << "> INFO_MSG:: ";
-    }
-
+    void LogInfo(const std::string& time_, const std::string& func_name, const std::string& file_name, int line_number);
 
 
 private:
