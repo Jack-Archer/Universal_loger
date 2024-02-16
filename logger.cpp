@@ -32,13 +32,12 @@
 
     bool Streamer::checkAllStreams() {
         if(my_stream_.empty()) {
-            std::cerr << "Stream map is empty" << std::endl;
-            return 0;
+           throw  std::logic_error("Stream map is empty");
         }
         for(const auto&[num, vec_str] : my_stream_) {
             if(my_stream_.at(num).empty()) {
                 std::cerr << "Stream at " << num <<  " is empty" << std::endl;
-                return 0;
+                throw std::logic_error("Stream is empty");
             }
         }
         return 1;

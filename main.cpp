@@ -11,6 +11,7 @@
 int main(){
 
     std::fstream fs("hello.txt",std::fstream::in | std::fstream::out | std::fstream::app);
+
     CREATE_LOG.addStream(1, &(std::cout));
     CREATE_LOG.addStream(1, &fs);
     CREATE_LOG.addStream(2, &(std::cout));
@@ -18,9 +19,15 @@ int main(){
     CREATE_LOG.addStream(3, &(std::cout));
     CREATE_LOG.addStream(3, &fs);
 
+    /*std::streambuf *p_buf = fs.rdbuf();
+    int fd_stream =  fileno(reinterpret_cast<std::ostream*>(p_buf)->rdbuf());
+    std::cout << "DISCRIPTOR STREAM : " << fd_stream << std::endl;*/
+
+
+
     CREATE_LOG.printAllStream();
     //CREATE_LOG.deleteAllStream();
-    CREATE_LOG.deleteStream(4);
+    //CREATE_LOG.deleteStream(4);
     std::cout << std::endl;
     if(CREATE_LOG.checkAllStreams()) {
         LOG[1]<< "STREAM 1";
